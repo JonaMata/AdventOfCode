@@ -1,4 +1,6 @@
 # Day 10 of Advent of Code 2023
+import timeit
+
 from aoc.helpers import *
 
 mapp = {
@@ -11,11 +13,11 @@ mapp = {
 }
 
 
-def find_neighbours(loc):
+def find_neighbours(loc, lines):
     return [(loc[0]+n[0], loc[1]+n[1]) for n in mapp[lines[loc[0]][loc[1]]]]
 
 
-def find_first_steps(start):
+def find_first_steps(start, lines):
     neighbours = []
     neighbours_delta = []
     for x in range(-1, 2):
@@ -24,7 +26,7 @@ def find_first_steps(start):
                 loc = (start[0]+y, start[1]+x)
                 if 0 <= loc[0] < len(lines) and 0 <= loc[1] < len(lines[loc[0]]):
                     if lines[loc[0]][loc[1]] in mapp:
-                        if start in find_neighbours(loc):
+                        if start in find_neighbours(loc, lines):
                             neighbours.append(loc)
                             neighbours_delta.append((y, x))
 
@@ -35,7 +37,8 @@ def find_first_steps(start):
 
     return neighbours
 
-if __name__ == "__main__":
+
+def main():
     inputs = get_input("\n", example=False)
 
     lines = [[x for x in l] for l in inputs]
@@ -49,14 +52,13 @@ if __name__ == "__main__":
             break
 
     prev_index = [start, start]
-    index = find_first_steps(start)
-    print(index)
+    index = find_first_steps(start, lines)
     steps = 1
     loop_indexes = {start, index[0], index[1]}
 
     while index[0] != index[1]:
         for i in range(len(index)):
-            neighbours = find_neighbours(index[i])
+            neighbours = find_neighbours(index[i], lines)
             next_index = list(filter(lambda n: n != prev_index[i], neighbours))[0]
             prev_index[i] = index[i]
             index[i] = next_index
@@ -93,3 +95,9 @@ if __name__ == "__main__":
                 inner_parts += 1
 
     print(f"Part 2: {inner_parts}")
+
+
+if __name__ == "__main__":
+    start = timeit.default_timer()
+    main()
+    print(f"Time taken: {timeit.default_timer()-start}s")

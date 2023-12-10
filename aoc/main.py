@@ -1,15 +1,25 @@
 #!/usr/bin/python3
-
 # Advent of code day generator + input downloader
 # Heavily inspired by https://github.com/Jessseee/AdventOfCode
 
 import os
+
 import click
-import dotenv
+from click import echo, style, secho
 import requests
 from datetime import datetime
 from dotenv import dotenv_values
 from importlib.resources import as_file, files
+
+logo = (
+style(("          .---_\n"
+"         / / /\|\n"
+"       / / | \ "), fg='red')+style("*\n", fg='yellow')+
+style("      /  /  \ \\         ", fg='red')+style("Advent\n", fg='green')+
+style("     / /  / \  \        ", fg='red')+style("of Code\n", fg='green')+
+style(("   ./~~~~~~~~~~~\.\n"
+"  ( .\",^. -\". '.~ )     "), fg='white')+style("Tool by\n", fg='green')+
+style("   '~~~~~~~~~~~~~'      ", fg='white')+style("Jonathan Matarazzi\n", fg='green'))
 
 
 def download_input(day_dir, year, day, session_id):
@@ -26,7 +36,7 @@ def download_input(day_dir, year, day, session_id):
 def init_day(year, day, session_id):
     day_dir = f"{year}/day_{day:02d}"
     if os.path.exists(day_dir):
-        print("Day already exists")
+        secho("Day already exists", fg='red')
         return
     else:
         os.makedirs(day_dir, exist_ok=True)
@@ -34,13 +44,13 @@ def init_day(year, day, session_id):
         input_file = f"{day_dir}/input.txt"
         example_input_file = f"{day_dir}/example.txt"
         if os.path.exists(input_file):
-            print(f"Input file already at {input_file}")
+            secho(f"Input file already at {input_file}", fg='red')
         else:
             download_input(day_dir, year, day, session_id)
 
         puzzle_file = f"{day_dir}/day_{day:02d}.py"
         if os.path.exists(puzzle_file):
-            print(f"Solution file already at {puzzle_file}")
+            secho(f"Solution file already at {puzzle_file}", fg='red')
         else:
             template_file = files("aoc").joinpath("day_template.py")
             with as_file(template_file) as file:
@@ -50,24 +60,24 @@ def init_day(year, day, session_id):
         os.system(f"pycharm {input_file}")
         os.system(f"pycharm {example_input_file}")
         os.system(f"pycharm {puzzle_file}")
-        print(f"Let's get started on day {day} of AdventofCode {year}!")
+        secho(f"Let's get started on day {day} of AdventofCode {year}!", fg='green')
 
 
 @click.group()
 def cli():
-    pass
+    click.clear()
+    secho(logo)
 
 
 @cli.command()
 @click.option("--date", type=click.DateTime(formats=["%Y-%d", "%Y%d"]), default=datetime.today())
 def init(date: datetime):
     session_id = dotenv_values()['SESSION_ID']
-    print(session_id)
     if date is not None:
         if int(date.year) < 2015:
-            print("There was no AdventOfCode before 2015 :(")
+            secho("There was no AdventOfCode before 2015 :(", fg='red')
         elif not 1 <= date.day <= 25:
-            print("Advent of code runs from 1 Dec until 25 Dec.")
+            secho("Advent of code runs from 1 Dec until 25 Dec.", fg='red')
         else:
             init_day(date.year, date.day, session_id)
 
@@ -79,11 +89,23 @@ def init(date: datetime):
 
         # Check if it is December yet
         if init_time.month != 12:
-            print("It is not December! If you want to initiate a previous year please provide a date.")
+            secho("It is not December! If you want to initiate a previous year please provide a date.", fg='red')
             exit()
 
         # Check if it is after midnight EST/UTC-5 (=05:00 UTC)
         if init_time.hour > 5:
             init_day(year, day, session_id)
         else:
-            print("There is no new puzzle yet! you have to wait until midnight EST/UTC-5.")
+            secho("There is no new puzzle yet! you have to wait until midnight EST/UTC-5.", fg='red')
+
+
+@cli.command()
+@click.argument('day', type=click.INT)
+@click.option('--year', type=click.INT, default=datetime.today().year)
+def run(year: int, day: int):
+    day_dir = f"{year}/day_{day:02d}"
+    file_path = f"day_{day:02d}.py"
+    if os.path.exists(f"{day_dir}/{file_path}"):
+        os.system(f"(cd {day_dir} && python {file_path})")
+    else:
+        secho(f"No files found for {year} day {day}", fg='red')
