@@ -45,8 +45,7 @@ def main():
     power = 0
     for i, box in enumerate(boxes):
         for j, lens in enumerate(box):
-            new_power = (i+1) * (j+1) * lens[1]
-            power += new_power
+            power += (i+1) * (j+1) * lens[1]
 
     print(f"Part2: {power}")
 
