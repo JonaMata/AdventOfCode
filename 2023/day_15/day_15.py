@@ -50,8 +50,6 @@ def main():
     print(f"Part2: {power}")
 
 
-
-
 if __name__ == "__main__":
     start = timeit.default_timer()
     main()
