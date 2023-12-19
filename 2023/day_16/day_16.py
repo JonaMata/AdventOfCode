@@ -2,18 +2,29 @@
 import sys
 import timeit
 
+import numpy as np
+
 from aoc.helpers import *
 
 
-def rec_follow_mirror(pos, direction, memory, visited, grid):
+def rec_follow_mirror(pos, direction, visited, memory, grid):
     if (pos, direction) in memory:
-        return
-    memory.add((pos, direction))
+        val = memory[(pos, direction)]
+        print(f"Hit memory, {pos=}, {direction=}, {val.sum()=}")
+        return memory[(pos, direction)]
+    result = np.full((len(grid), len(grid[0])), False)
+
     next_pos = pos[0] + direction[0], pos[1] + direction[1]
     if not (0 <= next_pos[0] < len(grid) and 0 <= next_pos[1] < len(grid[0])):
-        return
+        return result
 
-    visited.add(next_pos)
+    result[next_pos[0]][next_pos[1]] = True
+    # memory[(pos, direction)] = result
+
+    if (pos, direction) in visited:
+        return result
+    visited.add((pos, direction))
+
     next_grid = grid[next_pos[0]][next_pos[1]]
     next_dirs = []
     if next_grid == '/':
@@ -32,22 +43,38 @@ def rec_follow_mirror(pos, direction, memory, visited, grid):
     else:
         next_dirs.append(direction)
 
-    # print(f"pos: {pos}, direction: {direction}, next_pos: {next_pos}, next_dirs: {next_dirs}, next_grid: {next_grid}")
     for next_dir in next_dirs:
-        rec_follow_mirror(next_pos, next_dir, memory, visited, grid)
+        result = np.logical_or(result, rec_follow_mirror(next_pos, next_dir, visited, memory, grid))
+
+    memory[(pos, direction)] = result
+    return result
+
+
+def find_most_energised(grid):
+    memory = dict()
+    maximum = 0
+    for direction in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+        for j in range(len(grid)):
+            if direction[0] == 0:
+                start_pos = (j, -1 if direction[1] == 1 else len(grid))
+            else:
+                start_pos = (-1 if direction[0] == 1 else len(grid), j)
+            val = rec_follow_mirror(start_pos, direction, set(), memory, grid).sum()
+            print(f"{start_pos=}, {direction=}, {val=}")
+            maximum = max(maximum, val)
+    return maximum
 
 
 def main():
-    inputs = get_input("\n", example=False)
-    visited = set()
+    inputs = get_input("\n", example=True)
 
-    sys.setrecursionlimit(10**6)
+    sys.setrecursionlimit(10 ** 6)
 
-    rec_follow_mirror((0, -1), (0, 1), set(), visited, inputs)
+    energised = rec_follow_mirror((0, -1), (0, 1), set(), dict(), inputs)
 
-    energised = [['#' if (y, x) in visited else '.' for x in range(len(inputs[0]))] for y in range(len(inputs))]
-    # print_2d(energised)
-    print(f"Part1: {len(visited)}")
+    print(f"Part1: {energised.sum()}")
+
+    print(f"Part2: {find_most_energised(inputs)}")
 
 
 if __name__ == "__main__":
