@@ -1,4 +1,4 @@
-<tt style="color:red">
+<div style="color:red; font-family: monospace">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.---_<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;/&nbsp;/\|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;/&nbsp;|&nbsp;\ <span style="color:yellow">*<br/></span>
@@ -9,7 +9,7 @@
 &nbsp;&nbsp;(&nbsp;.",^.&nbsp;-".&nbsp;'.~&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;'~~~~~~~~~~~~~'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 </span>
-</tt>
+</div>
 
 # Advent of Code
 
