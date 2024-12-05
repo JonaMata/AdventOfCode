@@ -14,4 +14,6 @@ def get_input(split: str = None, example: bool = False):
             inputs = [char for char in inputs.read()]
         else:
             inputs = inputs.read().split(split)
-    return inputs
+        return inputs
+    else:
+        return inputs.read()

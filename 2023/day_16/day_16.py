@@ -10,7 +10,6 @@ from aoc.helpers import *
 def rec_follow_mirror(pos, direction, visited, memory, grid):
     if (pos, direction) in memory:
         val = memory[(pos, direction)]
-        print(f"Hit memory, {pos=}, {direction=}, {val.sum()=}")
         return memory[(pos, direction)]
     result = np.full((len(grid), len(grid[0])), False)
 
@@ -59,14 +58,13 @@ def find_most_energised(grid):
                 start_pos = (j, -1 if direction[1] == 1 else len(grid))
             else:
                 start_pos = (-1 if direction[0] == 1 else len(grid), j)
-            val = rec_follow_mirror(start_pos, direction, set(), memory, grid).sum()
-            print(f"{start_pos=}, {direction=}, {val=}")
+            val = rec_follow_mirror(start_pos, direction, set(), dict(), grid).sum()
             maximum = max(maximum, val)
     return maximum
 
 
 def main():
-    inputs = get_input("\n", example=True)
+    inputs = get_input("\n", example=False)
 
     sys.setrecursionlimit(10 ** 6)
 

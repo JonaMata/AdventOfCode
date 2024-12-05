@@ -49,8 +49,6 @@ def find_path(start, goal, grid, turn_range):
             for node in path:
                 grid[node[0][0]][node[0][1]] = char_map[node[1]]
 
-            print_2d(grid)
-
             return path, cost
 
         for neighbour in find_neighbours(node, grid, turn_range):
