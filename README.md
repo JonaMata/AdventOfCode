@@ -4,8 +4,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;/&nbsp;|&nbsp;\ <span style="color:yellow">*<br/></span>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;/&nbsp;&nbsp;\&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">Advent</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;/&nbsp;&nbsp;/&nbsp;\&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:green">of Code</span><br/>
-<span style="color:gray">
-&nbsp;&nbsp;&nbsp;./~~~~~~~~~~~\.<br>
+<span style="color:gray">&nbsp;&nbsp;&nbsp;./~~~~~~~~~~~\.<br>
 &nbsp;&nbsp;(&nbsp;.",^.&nbsp;-".&nbsp;'.~&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;'~~~~~~~~~~~~~'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 </span>
