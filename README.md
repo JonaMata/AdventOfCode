@@ -1,4 +1,4 @@
-<div style="color:red; font-family: monospace">
+<tt style="color:red;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.---_<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;/&nbsp;/\|<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;/&nbsp;|&nbsp;\ <span style="color:yellow">*<br/></span>
@@ -9,8 +9,10 @@
 &nbsp;&nbsp;(&nbsp;.",^.&nbsp;-".&nbsp;'.~&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;'~~~~~~~~~~~~~'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 </span>
-</div>
+</tt>
 
 # Advent of Code
 
 Here I will showcase my solutions to the puzzles of the yearly [advent of code](https://adventofcode.com) challenge.
+   
+   iiiiiiii

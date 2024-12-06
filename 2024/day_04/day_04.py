@@ -8,17 +8,19 @@ def main():
     inputs = get_input("\n", example=False)
     width = len(inputs[0])+1
     height = len(inputs)
-    hor_pattern = r"XMAS|SAMX"
-    ver_pattern = rf"X.{'{'+str(width-1)+'}'}M.{'{'+str(width-1)+'}'}A.{'{'+str(width-1)+'}'}S|S.{'{'+str(width-1)+'}'}A.{'{'+str(width-1)+'}'}M.{'{'+str(width-1)+'}'}X"
-    diag1_pattern = rf"X.{'{'+str(width)+'}'}M.{'{'+str(width)+'}'}A.{'{'+str(width)+'}'}S|S.{'{'+str(width)+'}'}A.{'{'+str(width)+'}'}M.{'{'+str(width)+'}'}X"
+    hor_pattern = r"XMAS|SAMX|"
+    ver_pattern = rf"X.{'{'+str(width-1)+'}'}M.{'{'+str(width-1)+'}'}A.{'{'+str(width-1)+'}'}S|S.{'{'+str(width-1)+'}'}A.{'{'+str(width-1)+'}'}M.{'{'+str(width-1)+'}'}X|"
+    diag1_pattern = rf"X.{'{'+str(width)+'}'}M.{'{'+str(width)+'}'}A.{'{'+str(width)+'}'}S|S.{'{'+str(width)+'}'}A.{'{'+str(width)+'}'}M.{'{'+str(width)+'}'}X|"
     diag2_pattern = rf"X.{'{'+str(width-2)+'}'}M.{'{'+str(width-2)+'}'}A.{'{'+str(width-2)+'}'}S|S.{'{'+str(width-2)+'}'}A.{'{'+str(width-2)+'}'}M.{'{'+str(width-2)+'}'}X"
     inputstring = str.join("Q", inputs)
-    matches_hor = re.findall(hor_pattern, inputstring, overlapped=True)
-    matches_ver = re.findall(ver_pattern, inputstring, overlapped=True)
-    matches_diag1 = re.findall(diag1_pattern, inputstring, overlapped=True)
-    matches_diag2 = re.findall(diag2_pattern, inputstring, overlapped=True)
-    print(f"Hor: {len(matches_hor)}, Ver: {len(matches_ver)}, Diag1: {len(matches_diag1)}, Diag2: {len(matches_diag2)}")
-    print(f"Star 1: {len(matches_hor)+len(matches_ver)+len(matches_diag1)+len(matches_diag2)}")
+    # matches_hor = re.findall(hor_pattern, inputstring, overlapped=True)
+    # matches_ver = re.findall(ver_pattern, inputstring, overlapped=True)
+    # matches_diag1 = re.findall(diag1_pattern, inputstring, overlapped=True)
+    # matches_diag2 = re.findall(diag2_pattern, inputstring, overlapped=True)
+    matches = re.findall(hor_pattern+ver_pattern+diag1_pattern+diag2_pattern, inputstring, overlapped=True)
+    # print(f"Hor: {len(matches_hor)}, Ver: {len(matches_ver)}, Diag1: {len(matches_diag1)}, Diag2: {len(matches_diag2)}")
+    # print(f"Star 1: {len(matches_hor)+len(matches_ver)+len(matches_diag1)+len(matches_diag2)}")
+    print(f"Star 1: {len(matches)}")
 
     # 2556 -- Too high
 
