@@ -22,7 +22,6 @@ def main():
     # print(f"Star 1: {len(matches_hor)+len(matches_ver)+len(matches_diag1)+len(matches_diag2)}")
     print(f"Star 1: {len(matches)}")
 
-    # 2556 -- Too high
 
     x_pattern1 = rf"M.M.{'{'+str(width-2)+'}'}A.{'{'+str(width-2)+'}'}S.S|"
     x_pattern2 = rf"M.S.{'{'+str(width-2)+'}'}A.{'{'+str(width-2)+'}'}M.S|"
@@ -31,7 +30,6 @@ def main():
     matches = re.findall(x_pattern1+x_pattern2+x_pattern3+x_pattern4, inputstring, overlapped=True)
     print(f"Star 2: {len(matches)}")
 
-    # 622 -- Too low
 
 if __name__ == "__main__":
     start = timeit.default_timer()

@@ -1,4 +1,4 @@
-# Day <DAY> of Advent of Code <YEAR>
+# Day 13 of Advent of Code 2015
 import timeit
 from aoc.helpers import *
 
@@ -6,13 +6,6 @@ from aoc.helpers import *
 def main():
     inputs = get_input("\n", example=False)
     print(inputs)
-
-    star1 = None
-    print(f"Star 1: {star1}")
-
-
-    star2 = None
-    print(f"Star 2: {star2}")
 
 
 if __name__ == "__main__":

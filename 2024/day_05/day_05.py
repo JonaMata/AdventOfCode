@@ -49,8 +49,6 @@ def check_manual(manual):
         seen.append(num)
     return int(manual[int((len(manual)+1)/2)-1])
 
-# 6604 -- Too high
-
 
 if __name__ == "__main__":
     start = timeit.default_timer()
