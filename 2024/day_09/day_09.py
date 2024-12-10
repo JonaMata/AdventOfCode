@@ -49,9 +49,9 @@ def main():
             filesystem.append(["free", inputs[i]])
 
     cur_id = last_id
+    cur = len(filesystem)-1
 
     for i in range(cur_id, -1, -1):
-        cur = len(filesystem)-1
         while filesystem[cur][0] != i:
             cur -= 1
         search = 0
