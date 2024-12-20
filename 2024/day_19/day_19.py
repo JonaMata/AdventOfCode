@@ -1,5 +1,7 @@
 # Day 19 of Advent of Code 2024
 import timeit
+from multiprocessing import Pool
+
 from aoc.helpers import *
 
 cache = dict()
@@ -30,21 +32,29 @@ def count_design(design, patterns, max_len):
     count_cache[design] = count
     return count
 
-def main():
+def process_input():
     patterns, designs = get_input("\n\n", example=False)
-    patterns = patterns.split(", ")
+    patterns = set(patterns.split(", "))
     designs = designs.split("\n")
     max_len = max([len(patt) for patt in patterns])
+    return designs, patterns, max_len
 
-    star1 = sum([1 if check_design(design, patterns, max_len) else 0 for design in designs])
+def part1(inputs):
+    designs, patterns, max_len = inputs
+    star1 = sum([1 if count_design(design, patterns, max_len) > 0 else 0 for design in designs])
     print(f"Star 1: {star1}")
 
-
+def part2(inputs):
+    designs, patterns, max_len = inputs
     star2 = sum([count_design(design, patterns, max_len) for design in designs])
     print(f"Star 2: {star2}")
 
 
 if __name__ == "__main__":
+    inputs = process_input()
     start = timeit.default_timer()
-    main()
+    part1(inputs)
+    print(f"Time taken: {(timeit.default_timer()-start)*1000:.2f}ms")
+    start = timeit.default_timer()
+    part2(inputs)
     print(f"Time taken: {(timeit.default_timer()-start)*1000:.2f}ms")
