@@ -1,18 +1,10 @@
 # Day 21 of Advent of Code 2024
 import bisect
 import math
-import re
 import timeit
-from multiprocessing import Pool
 
 from aoc.helpers import *
 
-# robo_move_map = {
-#     ('<', '^'): ['>^'],
-#     ('<', '>'): ['>>'],
-#     ('<', 'v'): ['>'],
-#     ('<', 'A'): ['>>^', '>^>']
-# }
 
 def get_neighbours(spot, maze):
     neighbours = [
@@ -84,51 +76,18 @@ def find_shortest_input(start, goal, maze):
 
     return reconstruct_paths(end, parents, [])
 
-# def code_to_sequence(code, seqmap, scoremap, use_cache = True):
-#     seq = ''
-#     for i in range(len(code)-1):
-#         best = math.inf
-#         new_seq = None
-#         for extra in seqmap[(code[i], code[i+1])]:
-#             test = seq+extra+'A'
-#             score = sequence_score(test, scoremap)
-#             if score < best:
-#                 new_seq = test
-#         seq = new_seq
-#     return seq
-
 cache = {}
-cache_max = 0
-cache_hit = 0
-cache_miss = 0
-def code_to_sequences(code, seqmap, use_cache = True):
-    global cache_max, cache_hit, cache_miss
-    if use_cache:
-        if code in cache:
-            cache_hit += 1
-            return cache[code]
+def code_to_sequences(code, seqmap):
+    if code in cache:
+        return cache[code]
     if len(code) < 2:
         return ['']
     seqs = []
-    used_cache = False
-    if use_cache and cache_max > 2:
-        for i in range(min(cache_max, len(code)), 2, -1):
-            if code[:i] in cache:
-                used_cache = True
-                for cache_code in cache[code[:i]]:
-                    for extra in code_to_sequences(code[i-1:], seqmap, use_cache):
-                        seqs.append(cache_code+extra)
-    if not used_cache:
-        cache_miss += 1
-        for move in seqmap[(code[0], code[1])]:
-            for extra in code_to_sequences(code[1:], seqmap, use_cache):
-                seqs.append(move+'A'+extra)
-    else:
-        cache_hit += 1
+    for move in seqmap[(code[0], code[1])]:
+        for extra in code_to_sequences(code[1:], seqmap):
+            seqs.append(move+'A'+extra)
     res = set(seqs)
-    if use_cache:
-        cache[code] = res
-        cache_max = max(cache_max, max([len(code) for code in res]))
+    cache[code] = res
     return res
 
 def sequence_score(seq, scoremap):
@@ -144,7 +103,7 @@ def print_hitrate():
     print(f"Cache hitrate: {hitrate:.0f}%")
 
 def process_input():
-    codes = get_input("\n", example=True)
+    codes = get_input("\n", example=False)
 
     numpad = [
         '789',
@@ -200,92 +159,45 @@ def process_input():
         lowest = min([sequence_score(path, scoremap) for path in keymap[key]])
         keymap[key] = list(filter(lambda x: sequence_score(x, scoremap) == lowest, keymap[key]))
 
-    return codes, nummap, keymap, scoremap
+    return codes, nummap, keymap
 
-cache = {}
+lens_cache = {}
 
 def find_length(code: str, keymap: dict, robots: int):
     if robots == 0:
         return len(code)
+    if (code, robots) in lens_cache:
+        return lens_cache[(code, robots)]
     lens = []
     for seq in code_to_sequences('A'+code, keymap):
-        print(seq)
         lens.append(sum([find_length(part+'A', keymap, robots-1) for part in seq[:-1].split('A')]))
-    return min(lens)
+    res = min(lens)
+    lens_cache[(code, robots)] = res
+    return res
 
-def create_lengths_map(keymap, robots):
-    return {key: min([find_length(code+'A', keymap, robots-1) for code in val]) for key, val in keymap.items()}
-
-
-def part1(vals):
-    codes, nummap, keymap, scoremap = vals
-
-    lens_map = create_lengths_map(keymap, 1)
-    print(lens_map)
+def complexity(codes, nummap, keymap, robots):
+    lens_map = {key: min([find_length(code+'A', keymap, robots-1) for code in val]) for key, val in keymap.items()}
     complexity_sum = 0
     for code in codes:
         keys = code_to_sequences('A' + code, nummap)
-
-        print(keys)
         lens = []
         for key in keys:
             length = 0
+            key = 'A'+key
             for i in range(len(key)-1):
                 length += lens_map[(key[i], key[i+1])]
             lens.append(length)
         num_part = int(re.findall(r"\d+", code)[0])
         complexity_sum += num_part * min(lens)
-        print(code, lens)
     return complexity_sum
 
-    complexity_sum = 0
-    for code in codes:
-        key = code_to_sequence('A'+code, nummap, scoremap, False)
-        # shortest = min([len(key) for key in keys])
-        # lowest_score = min([sequence_score(key, scoremap) for key in keys])
-        for i in range(2):
-            # keys = list(filter(lambda x: len(x) == shortest and sequence_score(x, scoremap) == lowest_score, keys))
-            # new_keys = []
-            # for key in keys:
-            #     new_keys.extend(code_to_sequences('A'+key, keymap))
-            key = code_to_sequence('A'+key, keymap, scoremap)
-            # shortest = min([len(key) for key in new_keys])
-            # lowest_score = min([sequence_score(key, scoremap) for key in new_keys])
-
-            # keys = new_keys
-        num_part = int(re.findall(r"\d+", code)[0])
-        # shortest = min([len(key) for key in keys])
-        complexity_sum += num_part*len(key)
-    return complexity_sum
+def part1(vals):
+    codes, nummap, keymap = vals
+    return complexity(codes, nummap, keymap, 2)
 
 def part2(vals):
-    return 0
-    codes, nummap, keymap, scoremap = vals
-    complexity_sum = 0
-    for code in codes:
-        print(f"Checking code: {code}")
-        keys = code_to_sequences('A'+code, nummap, False)
-        # shortest = min([len(key) for key in keys])
-        # lowest_score = min([sequence_score(key, scoremap) for key in keys])
-        for i in range(25):
-            print_hitrate()
-            print(f"\tLayer {i}/25")
-            # keys = list(filter(lambda x: len(x) == shortest and sequence_score(x, scoremap) == lowest_score, keys))
-            print(f"\tChecking {len(keys)} keys")
-            new_keys = []
-            checked = 0
-            for key in keys:
-                new_keys.extend(code_to_sequences('A'+key, keymap))
-                checked += 1
-                print(f"\t\tChecked {checked}/{len(keys)}")
-            # shortest = min([len(key) for key in new_keys])
-            # lowest_score = min([sequence_score(key, scoremap) for key in new_keys])
-            keys = new_keys
-        num_part = int(re.findall(r"\d+", code)[0])
-        shortest = min([len(key) for key in keys])
-        complexity_sum += num_part*shortest
-
-    return complexity_sum
+    codes, nummap, keymap = vals
+    return complexity(codes, nummap, keymap, 25)
 
 
 if __name__ == "__main__":
