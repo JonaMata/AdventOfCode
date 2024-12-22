@@ -1,6 +1,4 @@
 # Day 22 of Advent of Code 2024
-import functools
-import math
 import timeit
 from aoc.helpers import *
 from ctypes import CDLL, POINTER, c_int
@@ -12,53 +10,42 @@ def process_input():
     efficient_code.next_number.restype = POINTER(c_int)
 
     total = 0
-    price_sets = []
-    change_sets = []
+    change_price_dict = {}
     for val in vals:
         price = val % 10
-        prices = []
-        changes = []
         res = efficient_code.next_number(val, 2000)
         nums = res[:2000]
         efficient_code.free_memory(res)
-        for num in nums:
-            val = num
-            next_price = val % 10
-            prices.append(next_price)
-            changes.append(next_price-price)
+        happened = set()
+        change = 0
+        for i in range(3):
+            next_price = nums[i] % 10
+            change = (change*20 + next_price-price+10) % (20 ** 4)
             price = next_price
+        for i in range(3, len(nums)):
+            next_price = nums[i] % 10
+            change = (change*20 + next_price-price+10) % (20 ** 4)
+            price = next_price
+            if change not in happened:
+                happened.add(change)
+                if change not in change_price_dict:
+                    change_price_dict[change] = price
+                else:
+                    change_price_dict[change] += price
 
-        total += val
-        price_sets.append(prices)
-        change_sets.append(changes)
-    return total, price_sets, change_sets
 
-# mod = (1<<24)-1
-# def next_number(num):
-#     num = (num ^ (num<<6)) & mod
-#     num = (num ^ (num>>5)) & mod
-#     num = (num ^ (num<<11)) & mod
-#     return num
+
+        total += nums[-1]
+    return total, change_price_dict
 
 def part1(vals):
-    total, price_sets, change_sets = vals
+    total, *args = vals
 
     star1 = total
     return star1
 
 def part2_faster(vals):
-    total, price_sets, change_sets = vals
-    change_price_dict = {}
-    for i in range(len(price_sets)):
-        happened = set()
-        for j in range(len(price_sets[i])-3):
-            change_set = tuple(change_sets[i][j:j+4])
-            if change_set not in happened:
-                if change_set not in change_price_dict:
-                    change_price_dict[change_set] = price_sets[i][j+3]
-                else:
-                    change_price_dict[change_set] += price_sets[i][j+3]
-                happened.add(change_set)
+    total, change_price_dict = vals
 
     return max(change_price_dict.values())
 
