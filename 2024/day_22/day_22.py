@@ -54,7 +54,6 @@ def part2(vals):
         indexes = list(filter(lambda x: price_sets[i][x] == max_price, range(3, len(price_sets[i]))))
         for index in indexes:
             res = 0
-            # change_string = str.join("", [('+' if change >= 0 else '')+str(change)+',' for change in change_sets[i][index-3:index+1]])
             change_string = change_strings[i][(index-3)*3:(index+1)*3]
             if change_string in happened:
                 continue
