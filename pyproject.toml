@@ -7,6 +7,11 @@ requires-python = ">=3.11"
 authors = [
     {name = "Jonathan Matarazzi"},
 ]
+dependencies = [
+    "click>=8.1.8",
+    "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
+]
 
 [options]
 packages = ["aoc", "aoc.helpers"]
@@ -17,3 +22,11 @@ aoc = "aoc.main:cli"
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[dependency-groups]
+dev = [
+    "adventofcode",
+]
+
+[tool.uv.sources]
+adventofcode = { workspace = true }

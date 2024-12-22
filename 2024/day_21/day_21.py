@@ -1,5 +1,6 @@
 # Day 21 of Advent of Code 2024
 import bisect
+import functools
 import math
 import timeit
 
