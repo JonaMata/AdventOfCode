@@ -26,7 +26,6 @@ def process_input():
         change_sets.append(changes)
     return total, price_sets, change_sets
 
-@functools.cache
 def next_number(num):
     num = (num ^ (num*64)) % 16777216
     num = (num ^ (num//32)) % 16777216
