@@ -3,9 +3,13 @@ import functools
 import math
 import timeit
 from aoc.helpers import *
+from ctypes import CDLL, POINTER, c_int
 
 def process_input():
     vals = [int(val) for val in get_input("\n", example=False)]
+
+    efficient_code = CDLL("next_num.so")
+    efficient_code.next_number.restype = POINTER(c_int)
 
     total = 0
     price_sets = []
@@ -14,8 +18,11 @@ def process_input():
         price = val % 10
         prices = []
         changes = []
-        for i in range(2000):
-            val = next_number(val)
+        res = efficient_code.next_number(val, 2000)
+        nums = res[:2000]
+        efficient_code.free_memory(res)
+        for num in nums:
+            val = num
             next_price = val % 10
             prices.append(next_price)
             changes.append(next_price-price)
@@ -26,11 +33,12 @@ def process_input():
         change_sets.append(changes)
     return total, price_sets, change_sets
 
-def next_number(num):
-    num = (num ^ (num*64)) % 16777216
-    num = (num ^ (num//32)) % 16777216
-    num = (num ^ (num*2048)) % 16777216
-    return num
+# mod = (1<<24)-1
+# def next_number(num):
+#     num = (num ^ (num<<6)) & mod
+#     num = (num ^ (num>>5)) & mod
+#     num = (num ^ (num<<11)) & mod
+#     return num
 
 def part1(vals):
     total, price_sets, change_sets = vals
