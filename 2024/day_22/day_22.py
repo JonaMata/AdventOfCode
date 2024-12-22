@@ -5,27 +5,9 @@ import timeit
 from aoc.helpers import *
 
 def process_input():
-    vals = [int(val) for val in get_input("\n", example=True)]
-    return vals
+    vals = [int(val) for val in get_input("\n", example=False)]
 
-@functools.cache
-def next_number(num):
-    num = (num ^ (num*64)) % 16777216
-    num = (num ^ (num//32)) % 16777216
-    num = (num ^ (num*2048)) % 16777216
-    return num
-
-def part1(vals):
     total = 0
-    for val in vals:
-        for i in range(2000):
-            val = next_number(val)
-        total += val
-
-    star1 = total
-    return star1
-
-def part2(vals):
     price_sets = []
     change_sets = []
     for val in vals:
@@ -38,9 +20,43 @@ def part2(vals):
             prices.append(next_price)
             changes.append(next_price-price)
             price = next_price
+
+        total += val
         price_sets.append(prices)
         change_sets.append(changes)
+    return total, price_sets, change_sets
 
+@functools.cache
+def next_number(num):
+    num = (num ^ (num*64)) % 16777216
+    num = (num ^ (num//32)) % 16777216
+    num = (num ^ (num*2048)) % 16777216
+    return num
+
+def part1(vals):
+    total, price_sets, change_sets = vals
+
+    star1 = total
+    return star1
+
+def part2_faster(vals):
+    total, price_sets, change_sets = vals
+    change_price_dict = {}
+    for i in range(len(price_sets)):
+        happened = set()
+        for j in range(len(price_sets[i])-3):
+            change_set = tuple(change_sets[i][j:j+4])
+            if change_set not in happened:
+                if change_set not in change_price_dict:
+                    change_price_dict[change_set] = price_sets[i][j+3]
+                else:
+                    change_price_dict[change_set] += price_sets[i][j+3]
+                happened.add(change_set)
+
+    return max(change_price_dict.values())
+
+def part2(vals):
+    total, price_sets, change_sets = vals
     change_strings = [str.join("", [('+' if change >= 0 else '')+str(change)+',' for change in changes]) for changes in change_sets]
 
     results = set()
@@ -85,7 +101,7 @@ if __name__ == "__main__":
     print(f"Part 1: {part1(inputs)}")
     print(f"Time taken: {(timeit.default_timer()-start_part1)*1000:.2f}ms")
     start_part2 = timeit.default_timer()
-    print(f"Star 2: {part2(inputs)}")
+    print(f"Star 2: {part2_faster(inputs)}")
     print(f"Time taken: {(timeit.default_timer()-start_part2)*1000:.2f}ms")
 
     print(f"\n Total time taken: {(timeit.default_timer()-start_total)*1000:.2f}ms")
