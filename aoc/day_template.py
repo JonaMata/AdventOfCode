@@ -5,6 +5,7 @@ from aoc.helpers import *
 def process_input():
     vals = get_input("\n", example=False)
     return vals
+
 def part1(vals):
     star1 = None
     return star1
