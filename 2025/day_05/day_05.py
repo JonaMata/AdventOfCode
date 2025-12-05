@@ -20,11 +20,12 @@ def part1(vals):
 
 def merge_ranges(ranges):
     new_ranges = []
+    ranges.sort()
     for i in range(len(ranges)):
         cur_range = ranges[i]
         merged = False
         for new_range in new_ranges:
-            if cur_range[0] <= new_range[1] and new_range[0] <= cur_range[1]:
+            if cur_range[0] <= new_range[1]+1 and new_range[0] <= cur_range[1]+1:
                 new_range[0] = min(new_range[0], cur_range[0])
                 new_range[1] = max(new_range[1], cur_range[1])
                 merged = True
@@ -36,10 +37,8 @@ def merge_ranges(ranges):
 
 def part2(vals):
     ranges = merge_ranges(vals[0])
-    new_ranges = merge_ranges(ranges)
-    newer_ranges = merge_ranges(new_ranges)
     total = 0
-    for rang in newer_ranges:
+    for rang in ranges:
         total += rang[1]-rang[0]+1
     star2 = total
     return star2
